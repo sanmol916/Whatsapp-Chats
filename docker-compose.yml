@@ -1,0 +1,10 @@
+services:
+  whatsapp-viewer:
+    build: .
+    container_name: whatsapp-viewer
+    ports:
+      - "8000:8000"
+    volumes:
+      # Uploaded media + database persist here on your host disk.
+      - ./storage:/data
+    restart: unless-stopped

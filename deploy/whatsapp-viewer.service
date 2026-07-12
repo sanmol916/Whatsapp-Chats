@@ -1,0 +1,19 @@
+[Unit]
+Description=WhatsApp Export Viewer (panel)
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/whatsapp-viewer/backend
+# Store the database + media on the big data disk (see deploy guide).
+Environment=WA_STORAGE_DIR=/mnt/data/storage
+ExecStart=/opt/whatsapp-viewer/backend/.venv/bin/python -m uvicorn app.main:app \
+    --host 127.0.0.1 --port 8000 --timeout-keep-alive 300
+Restart=always
+RestartSec=3
+# Large uploads take a while; don't let systemd kill long requests.
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

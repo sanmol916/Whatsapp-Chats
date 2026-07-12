@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Export Viewer &mdash; Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2325D366'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-logo">
+        <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
+          <path fill="#fff" d="M16 3C9 3 3.5 8.5 3.5 15.5c0 2.4.7 4.7 1.9 6.7L3 29l7-1.8c1.9 1 4 1.6 6 1.6 7 0 12.5-5.5 12.5-12.5S23 3 16 3zm0 22.6c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-4.2 1.1 1.1-4.1-.2-.4a10 10 0 01-1.5-5.3c0-5.6 4.6-10.1 10.3-10.1 5.7 0 10.3 4.5 10.3 10.1S21.7 25.6 16 25.6z"/>
+          <path fill="#fff" d="M21.7 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1-1.7-.9-2.9-1.6-4-3.5-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7 2 .8 2.7.9 3.7.8.6-.1 1.8-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.2-.6-.4z"/>
+        </svg>
+      </span>
+      <div class="brand-text">
+        <h1>WhatsApp Export Viewer</h1>
+        <span class="brand-sub">Admin panel</span>
+      </div>
+    </div>
+    <div class="topbar-stats" id="topbarStats">
+      <div class="stat"><b id="statChats">0</b><span>Chats</span></div>
+      <div class="stat"><b id="statMsgs">0</b><span>Messages</span></div>
+      <div class="stat"><b id="statMedia">0</b><span>Media</span></div>
+    </div>
+    <button class="btn-upload" id="openUpload">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 3l5 5h-3v6h-4V8H7l5-5zM5 18h14v2H5z"/></svg>
+      Upload export
+    </button>
+  </header>
+
+  <!-- ===================== MAIN LAYOUT ===================== -->
+  <main class="layout">
+    <!-- Left: chat list -->
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <div class="search">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3a6.5 6.5 0 10-.7.7l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0a4.5 4.5 0 110-9 4.5 4.5 0 010 9z"/></svg>
+          <input id="chatSearch" type="text" placeholder="Search chats" />
+        </div>
+      </div>
+      <div class="chat-list" id="chatList">
+        <div class="empty-hint" id="chatListEmpty">
+          <p>No chats yet.</p>
+          <p class="muted">Upload a WhatsApp export .zip to get started.</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right: conversation / gallery -->
+    <section class="content" id="content">
+      <div class="placeholder" id="placeholder">
+        <div class="placeholder-card">
+          <div class="placeholder-logo">
+            <svg viewBox="0 0 32 32" width="64" height="64"><circle cx="16" cy="16" r="16" fill="#25D366"/><path fill="#fff" d="M16 7c-5 0-9 3.9-9 8.8 0 1.7.5 3.3 1.4 4.7L7 25l4.7-1.2c1.3.7 2.8 1.1 4.3 1.1 5 0 9-3.9 9-8.8S21 7 16 7z"/></svg>
+          </div>
+          <h2>Select a chat to view</h2>
+          <p class="muted">Conversations are rendered just like WhatsApp. Use the media tab inside a chat to browse all photos, videos, audio and documents.</p>
+        </div>
+      </div>
+
+      <!-- Conversation view -->
+      <div class="conversation hidden" id="conversation">
+        <div class="conv-head">
+          <button class="icon-btn back-btn" id="backBtn" title="Back">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M20 11H7.8l5.6-5.6L12 4l-8 8 8 8 1.4-1.4L7.8 13H20z"/></svg>
+          </button>
+          <div class="conv-avatar" id="convAvatar">?</div>
+          <div class="conv-meta">
+            <h3 id="convName">Chat</h3>
+            <span id="convSub" class="muted"></span>
+          </div>
+          <div class="conv-tabs">
+            <button class="tab active" data-tab="chat" id="tabChat">Chat</button>
+            <button class="tab" data-tab="media" id="tabMedia">Media</button>
+            <button class="tab" data-tab="info" id="tabInfo">Info</button>
+          </div>
+          <div class="conv-search">
+            <input id="msgSearch" type="text" placeholder="Search in chat" />
+          </div>
+        </div>
+
+        <!-- Chat messages -->
+        <div class="messages-wrap" id="messagesWrap">
+          <div class="messages" id="messages"></div>
+        </div>
+
+        <!-- Media gallery -->
+        <div class="gallery-wrap hidden" id="galleryWrap">
+          <div class="gallery-filters" id="galleryFilters"></div>
+          <div class="gallery" id="gallery"></div>
+        </div>
+
+        <!-- Info panel -->
+        <div class="info-wrap hidden" id="infoWrap">
+          <div class="info-card" id="infoCard"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== UPLOAD MODAL ===================== -->
+  <div class="modal-backdrop hidden" id="uploadModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>Upload WhatsApp export</h2>
+        <button class="icon-btn" id="closeUpload">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="dropzone" id="dropzone">
+          <svg viewBox="0 0 24 24" width="46" height="46"><path fill="currentColor" d="M19 15v4H5v-4H3v6h18v-6h-2zM11 3v9.2L7.6 8.8 6.2 10.2 12 16l5.8-5.8-1.4-1.4L13 12.2V3h-2z"/></svg>
+          <p><b>Drop a .zip here</b> or click to choose</p>
+          <p class="muted">Export a chat from WhatsApp &rarr; "Export chat" &rarr; "Include media". Large multi-GB archives are supported.</p>
+          <input type="file" id="fileInput" accept=".zip,application/zip" hidden />
+        </div>
+
+        <div class="upload-progress hidden" id="uploadProgress">
+          <div class="up-file" id="upFileName"></div>
+          <div class="progress-track"><div class="progress-bar" id="upBar"></div></div>
+          <div class="up-status" id="upStatus">Preparing&hellip;</div>
+        </div>
+
+        <div class="jobs" id="jobs"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== LIGHTBOX ===================== -->
+  <div class="lightbox hidden" id="lightbox">
+    <button class="icon-btn lightbox-close" id="lightboxClose">&times;</button>
+    <a class="lightbox-download" id="lightboxDownload" title="Download">
+      <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 3v10.2l3.4-3.4 1.4 1.4L12 17l-4.8-5.8 1.4-1.4L12 13.2V3h0zM5 19h14v2H5z"/></svg>
+    </a>
+    <div class="lightbox-content" id="lightboxContent"></div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
