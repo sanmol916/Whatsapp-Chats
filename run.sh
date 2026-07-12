@@ -15,9 +15,13 @@ PORT="${PORT:-8000}"
 if [ ! -d ".venv" ]; then
   echo "Creating virtual environment..."
   python -m venv .venv
-  ./.venv/bin/pip install --upgrade pip
-  ./.venv/bin/pip install -r requirements.txt
 fi
+
+# Always ensure dependencies are present/up to date (fast when already satisfied).
+# This also repairs an existing .venv after a requirements change (e.g. the
+# SQLAlchemy upgrade needed for Python 3.13/3.14).
+./.venv/bin/pip install --upgrade pip >/dev/null
+./.venv/bin/pip install -r requirements.txt
 
 # Timeouts kept high so multi-GB uploads over slow links don't get cut off.
 exec ./.venv/bin/python -m uvicorn app.main:app \

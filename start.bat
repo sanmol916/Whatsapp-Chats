@@ -18,11 +18,16 @@ if errorlevel 1 (
 )
 
 if not exist ".venv" (
-  echo First run: creating virtual environment and installing dependencies...
+  echo First run: creating virtual environment...
   python -m venv .venv
-  call ".venv\Scripts\python.exe" -m pip install --upgrade pip
-  call ".venv\Scripts\python.exe" -m pip install -r requirements.txt
 )
+
+REM Always install/update dependencies (fast when already satisfied). This also
+REM repairs an existing .venv after a requirements change, e.g. the SQLAlchemy
+REM upgrade needed for Python 3.13/3.14.
+echo Installing/updating dependencies...
+call ".venv\Scripts\python.exe" -m pip install --upgrade pip
+call ".venv\Scripts\python.exe" -m pip install -r requirements.txt
 
 echo.
 echo ============================================================
